@@ -41,46 +41,69 @@ const CsvUpload: React.FC = () => {
     setUploadStatus(null);
 
     try {
-      // Simulate AWS S3 upload
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      // Parse CSV (in a real app, this would happen server-side)
+      // Parse CSV (in this demo app, we do it locally)
       const text = await file.text();
+      
+      // Process the CSV text
+      console.log("CSV content:", text);
+      
+      // Split into rows and trim empty rows
       const rows = text.split('\n').filter(row => row.trim() !== '');
-      const headers = rows[0].split(',');
-
-      // Validate headers
+      console.log("Rows:", rows);
+      
+      if (rows.length < 2) {
+        throw new Error("CSV file must have a header row and at least one data row");
+      }
+      
+      // Extract headers
+      const headers = rows[0].split(',').map(header => header.trim());
+      console.log("Headers:", headers);
+      
+      // Validate required columns
       const requiredColumns = ['id', 'name', 'description', 'basePrice', 'stock', 'image', 'category'];
       const missingColumns = requiredColumns.filter(col => !headers.includes(col));
-
+      
       if (missingColumns.length > 0) {
         throw new Error(`Missing required columns: ${missingColumns.join(', ')}`);
       }
-
-      // Parse data
-      const products = rows.slice(1).map(row => {
-        const values = row.split(',');
-        const product: Omit<Product, "price"> = {
-          id: "",
-          name: "",
-          description: "",
-          basePrice: 0,
-          stock: 0,
-          image: "",
-          category: ""
-        };
-
+      
+      // Parse data rows
+      const products: Omit<Product, "price">[] = [];
+      
+      for (let i = 1; i < rows.length; i++) {
+        // Skip empty rows
+        if (!rows[i].trim()) continue;
+        
+        const values = rows[i].split(',');
+        // Ensure we have the correct number of values
+        if (values.length !== headers.length) {
+          console.warn(`Row ${i} has ${values.length} values but should have ${headers.length}. Skipping.`);
+          continue;
+        }
+        
+        // Create product object
+        const product: any = {};
+        
+        // Populate product object from CSV data
         headers.forEach((header, index) => {
+          const value = values[index]?.trim();
+          
           if (header === 'basePrice' || header === 'stock') {
-            (product as any)[header] = parseFloat(values[index]);
+            product[header] = parseFloat(value) || 0;
           } else {
-            (product as any)[header] = values[index];
+            product[header] = value || '';
           }
         });
-
-        return product;
-      });
-
+        
+        products.push(product as Omit<Product, "price">);
+      }
+      
+      console.log("Parsed products:", products);
+      
+      if (products.length === 0) {
+        throw new Error("No valid products found in CSV file");
+      }
+      
       // Upload products to the store
       uploadProducts(products);
 
@@ -157,7 +180,7 @@ const CsvUpload: React.FC = () => {
               disabled={!file || uploading}
               className="w-full"
             >
-              {uploading ? "Uploading..." : "Upload to AWS S3 & Process"}
+              {uploading ? "Uploading..." : "Process CSV File"}
             </Button>
             <p className="text-xs text-gray-500 mt-2">
               This is a demo application. The CSV is processed locally without actual AWS integration.
@@ -168,8 +191,8 @@ const CsvUpload: React.FC = () => {
             <h4 className="text-sm font-medium mb-2">Sample CSV Format</h4>
             <pre className="text-xs overflow-x-auto p-2 bg-white rounded border">
               id,name,description,basePrice,stock,image,category<br />
-              1,Laptop Pro,High-performance laptop,1200,10,https://example.com/laptop.jpg,Electronics<br />
-              2,Office Chair,Ergonomic chair for your office,300,25,https://example.com/chair.jpg,Furniture
+              7,Gaming Headset,High-quality gaming headphones,150,20,https://example.com/headset.jpg,Electronics<br />
+              8,Ergonomic Desk,Adjustable standing desk,500,15,https://example.com/desk.jpg,Furniture
             </pre>
           </div>
         </div>
