@@ -1,0 +1,8 @@
+
+id,name,description,basePrice,stock,image,category
+7,Gaming Headset,High-quality noise-cancelling gaming headphones,150,20,https://images.unsplash.com/photo-1598591497063-35decb8b6986?w=500&auto=format,Electronics
+8,Ergonomic Desk,Adjustable standing desk for home office,500,15,https://images.unsplash.com/photo-1533090481720-854c7ace2dac?w=500&auto=format,Furniture
+9,Smart Thermostat,WiFi-enabled smart home temperature control,200,30,https://images.unsplash.com/photo-1599996454545-1043139fc82c?w=500&auto=format,Smart Home
+10,Noise-Cancelling Earbuds,Wireless earbuds with active noise cancellation,120,40,https://images.unsplash.com/photo-1600294037681-5327b4e02015?w=500&auto=format,Electronics
+11,Portable Power Station,High-capacity outdoor power bank for camping,300,25,https://images.unsplash.com/photo-1576013551627-39711cd1bc5c?w=500&auto=format,Outdoor Gear
+12,Smart Coffee Maker,Programmable coffee machine with mobile app,250,18,https://images.unsplash.com/photo-1533479573693-ba5a0c8ca914?w=500&auto=format,Kitchen Appliances
