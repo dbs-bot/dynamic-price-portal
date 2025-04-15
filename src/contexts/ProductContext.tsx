@@ -35,7 +35,7 @@ const ProductContext = createContext<ProductContextType>({
   filteredProducts: [],
   searchTerm: "",
   setSearchTerm: () => {},
-  filterCategory: "",
+  filterCategory: "all",
   setFilterCategory: () => {},
   categories: [],
   uploadProducts: () => {},
@@ -107,7 +107,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [baseProducts, setBaseProducts] = useState<Omit<Product, "price">[]>(initialProducts);
   const [products, setProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterCategory, setFilterCategory] = useState("");
+  const [filterCategory, setFilterCategory] = useState("all");
   const [isLoading, setIsLoading] = useState(false);
   
   // Calculate prices based on user role
@@ -148,7 +148,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          product.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = filterCategory === "" || product.category === filterCategory;
+    const matchesCategory = filterCategory === "all" || product.category === filterCategory;
     
     return matchesSearch && matchesCategory;
   });

@@ -16,7 +16,7 @@ const ProductFilter: React.FC = () => {
   
   const handleClearFilters = () => {
     setSearchTerm("");
-    setFilterCategory("");
+    setFilterCategory("all");
   };
   
   return (
@@ -52,7 +52,7 @@ const ProductFilter: React.FC = () => {
               <SelectValue placeholder="All Categories" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Categories</SelectItem>
+              <SelectItem value="all">All Categories</SelectItem>
               {categories.map((category) => (
                 <SelectItem key={category} value={category}>
                   {category}
@@ -66,7 +66,7 @@ const ProductFilter: React.FC = () => {
           <Button
             variant="outline"
             onClick={handleClearFilters}
-            disabled={!searchTerm && !filterCategory}
+            disabled={!searchTerm && filterCategory === "all"}
           >
             Clear Filters
           </Button>
